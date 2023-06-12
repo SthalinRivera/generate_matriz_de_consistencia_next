@@ -1,75 +1,111 @@
-import Head from "next/head";
+
 import { useState } from "react";
 import styles from "./index.module.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'mdb-ui-kit/css/mdb.min.css';
+import { Loading } from "./components/Loading";
+import { Head } from "./components/Head.js";
 export default function Home() {
-  const [animalInput, setAnimalInput] = useState("");
+  const [variable1Input, setVariable1Input] = useState("");
+  const [variable2Input, setVariable2Input] = useState("");
   const [result, setResult] = useState();
-
+  const [divVisible, setDivVisible] = useState(false);
+  const [loadingVisible, setLoadingVisible] = useState(false);
   async function onSubmit(event) {
     event.preventDefault();
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ animal: animalInput }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ variable1: variable1Input, variable2: variable2Input }),
+
       });
-
       const data = await response.json();
-      if (response.status !== 200) {
-        throw data.error || new Error(`Request failed with status ${response.status}`);
-      }
 
+      if (response.status !== 200) {
+        throw data.error || new Error(`Solicitud fallida con estado ${response.status}`);
+      }
       setResult(data.result);
-      setAnimalInput("");
-    } catch(error) {
-      // Consider implementing your own error handling logic here
+    
+      setLoadingVisible(loadingVisible);
+
+      setDivVisible(!divVisible);
+    } catch (error) {
+      // Considere implementar su propia lógica de manejo de errores aquí
       console.error(error);
       alert(error.message);
     }
   }
 
+ 
+
+
   return (
     <div>
-      <Head>
-        <title>OpenAI Quickstart</title> 
-         <link rel="icon" href="/dog.png" />
-        <nav class="navbar navbar-expand-lg bg-info">
-          <div class="container-fluid">
-            <a class="navbar-brand" href="#">OpenAI</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/restaurant">Restaurant  </a>
-                </li>
-              </ul>
+ 
+      <main class={styles.main}> 
+      
+        <div class="container text-center mt-3">
+              
+           
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header bg-success">
+                  <h3 class="text-light">Generar matriz de consistencia </h3>
+                </div>
+                <div class="card-body">
+                  <form onSubmit={onSubmit} >
+                    <div class="mb-3">
+                      <input type="text"
+                        name="variable1"
+                        placeholder="Escribir variable 1 (Eg: Aplicación movil, etc...) "
+                        value={variable1Input}
+                        onChange={(e) => setVariable1Input(e.target.value)} class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                      <input
+                        type="text"
+                        name="variable2"
+                        placeholder="Escribir variable 2 (Eg: Mejorar proceso de ventas, etc...) "
+                        value={variable2Input}
+                        onChange={(e) => setVariable2Input(e.target.value)} class="form-control" />
+                    </div>
+                    <br />
+                    <input class="btn btn-primary btn-lg" type="submit" value="Generar" />
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
-        </nav>
-        
-      
-      </Head>
-
-      <main className={styles.main}>
-        <img src="/dog.png" className={styles.icon} />
-        <h3>Nombrar a mi mascota</h3>
-        <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            name="animal"
-            placeholder="Ingrese un animal"
-            value={animalInput}
-            onChange={(e) => setAnimalInput(e.target.value)}
-          />
-          <input  className={styles.submitIndex} type="submit" value="Generar nombres" />
-        </form>
-        <div className={styles.result}>{result}</div>
+   
+          <div>
+            <div>
+              {divVisible &&
+                <div>
+                  <div class="card mt-4" >
+                    <div class="card-body">
+                      <div class="card-header bg-success">
+                        <h3 class="text-light">Matriz de consistencia </h3>
+                      </div>
+                      <div class="card-body">
+                        <div dangerouslySetInnerHTML={{ __html: result }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+              {loadingVisible &&
+                <div>
+                 <Loading></Loading>
+                    <div><Head/></div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
       </main>
     </div>
-  );
-}
+  )
+};
+

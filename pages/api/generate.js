@@ -9,17 +9,20 @@ export default async function (req, res) {
   if (!configuration.apiKey) {
     res.status(500).json({
       error: {
-        message: "OpenAI API key not configured, please follow instructions in README.md",
+        message: "OpenAI API key not La clave API de OpenAI no está configurada, siga las instrucciones en README.md",
       }
     });
     return;
   }
 
-  const animal = req.body.animal || '';
-  if (animal.trim().length === 0) {
+  const variable1 = req.body.variable1 || '';
+  const variable2 = req.body.variable2 || '';
+  const var1 = req.body.var1 || ''
+  const var2 = req.body.var2 || ''
+  if (variable1.trim().length === 0) {
     res.status(400).json({
       error: {
-        message: "Please enter a valid animal",
+        message: "Ingresar un texto",
       }
     });
     return;
@@ -28,35 +31,38 @@ export default async function (req, res) {
   try {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: generatePrompt(animal),
-      temperature: 0.6,
+      prompt: generatePrompt(variable1, variable2),
+      temperature: 0.5,
+      max_tokens: 1097,
+      top_p: 1.0,
+      frequency_penalty: 0.0,
+      presence_penalty: 0.0,
     });
     res.status(200).json({ result: completion.data.choices[0].text });
-  } catch(error) {
-    // Consider adjusting the error handling logic for your use case
+
+  } catch (error) {
+    // Considere ajustar la lógica de manejo de errores para su caso de uso
     if (error.response) {
       console.error(error.response.status, error.response.data);
       res.status(error.response.status).json(error.response.data);
     } else {
-      console.error(`Error with OpenAI API request: ${error.message}`);
+      console.error(`Error con la solicitud de API de OpenAI:: ${error.message}`);
       res.status(500).json({
         error: {
-          message: 'An error occurred during your request.',
+          message: 'Ocurrió un error durante su solicitud.',
         }
       });
     }
   }
 }
 
-function generatePrompt(animal) {
-  const capitalizedAnimal =
-    animal[0].toUpperCase() + animal.slice(1).toLowerCase();
-  return `Sugiere tres nombres para un animal que sea un superhéroe.
-
-Animal: GATO
-Names: Capitán Zarpafilada, Agente bola de pelusa, El Increíble Felino
-Animal: Dog
-Names: Protector de la noche, canino maravilla, Señor ladra mucho
-Animal: ${capitalizedAnimal}
-Names:`;
+function generatePrompt(variable1, variable2) {
+  const var01 =
+    variable1[0].toUpperCase() + variable1.slice(1).toLowerCase();
+  const var02 =
+    variable2[0].toUpperCase() + variable2.slice(1).toLowerCase();
+  return ` Generar una matriz de consistencia en formato html  con style "bootstrap" con class="table-responsive" tomando en cuenta "Problemas general y especificos", "definicion de la variable" , "objetivos general y especificos" , "hipotisis general y especificos", dimensiones, "variable indicadores" , si es cualitativa o cuantitativas y metodologia
+ de las siguientes variables:
+${var01} y ${var02}`;
 }
+
