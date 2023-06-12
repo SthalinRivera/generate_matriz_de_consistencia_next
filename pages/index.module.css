@@ -17,7 +17,7 @@
 .main input {
   font-size: 16px;
   line-height: 24px;
-  color: #353740;
+  color: #443838;
   font-family: "ColfaxAI", Helvetica, sans-serif;
 }
 .main {
@@ -27,7 +27,7 @@
   padding-top: 60px;
 }
 .main .icon {
-  width: 34px;
+  width: 84px;
 }
 .main h3 {
   font-size: 32px;
@@ -52,7 +52,8 @@
   color: #8e8ea0;
   opacity: 1;
 }
-.main input[type="submit"] {
+
+.submitIndex{
   padding: 12px 0;
   color: #fff;
   background-color: #10a37f;
@@ -64,4 +65,27 @@
 .main .result {
   font-weight: bold;
   margin-top: 40px;
+}
+.inputRestaurant{
+  padding: 24px 12px;
+  color: #140202;
+  background-color: #dfe3e2;
+  border-color: #10a37f;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+}
+.resultRestaurant{
+  font-weight: bold;
+  margin-top: 40px;
+}
+.btnRestaurant{
+  padding: 12px 0;
+  color: #fffdfd;
+  background-color: #0a981d;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  
 }
